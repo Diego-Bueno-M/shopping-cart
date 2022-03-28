@@ -40,11 +40,19 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+const eraseItems = () => {
+  const itemsOl = document.querySelector('.cart__items');
+  itemsOl.innerHTML = '';
+};
+
 // Adiciona um produto ao carrinho de compras (precisa do obj com sku, nome e preço)
 function addToCart(obj) {
+  const eraseBtn = document.querySelector('.empty-cart');
   const cart = document.querySelector('.cart__items');
   const itemToCart = createCartItemElement(obj);
   cart.appendChild(itemToCart);
+  // tenho que chamar a função de apagar todos os itens aqui, pq é aqui que esta sendo criada a lista
+  eraseBtn.addEventListener('click', eraseItems);
 }
 
 async function getObjfomItem(event) {
@@ -73,7 +81,7 @@ function appendItens(APIarray) {
     };
     return shortObj;
   });
-  // depois das informações necessárias é só percorrer o array
+ // depois percorro o array para pegar outras informações a adiconar o evento de cliclk
   itemsArray.forEach((item) => {
     const itenToadd = createProductItemElement(item);
     items.appendChild(itenToadd);
@@ -81,6 +89,10 @@ function appendItens(APIarray) {
     button.addEventListener('click', getObjfomItem);
   });
 }
+
+// const calculatePrice = () => {
+
+// }
 
 window.onload = async () => {
   const api = await fetchProducts('computador');
