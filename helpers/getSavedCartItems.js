@@ -1,7 +1,7 @@
 const getSavedCartItems = () => {
   // seu código aqui
-  const cart = document.querySelector('.cart__items');
-  cart.innerHTML = localStorage.getItem('itemList');
+  const saved = localStorage.getItem('cartItems');
+  return saved;
 };
 
 if (typeof module !== 'undefined') {

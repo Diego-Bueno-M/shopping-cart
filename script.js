@@ -1,3 +1,5 @@
+const cart = document.querySelector('.cart__items');
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -40,19 +42,24 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+function setLocalStorage() {
+  saveCartItems(cart.innerHTML);
+}
+
 const eraseItems = () => {
-  const itemsOl = document.querySelector('.cart__items');
-  itemsOl.innerHTML = '';
+  cart.innerHTML = '';
+  setLocalStorage();
 };
 
 // Adiciona um produto ao carrinho de compras (precisa do obj com sku, nome e preço)
 function addToCart(obj) {
   const eraseBtn = document.querySelector('.empty-cart');
-  const cart = document.querySelector('.cart__items');
+  
   const itemToCart = createCartItemElement(obj);
   cart.appendChild(itemToCart);
   // tenho que chamar a função de apagar todos os itens aqui, pq é aqui que esta sendo criada a lista
   eraseBtn.addEventListener('click', eraseItems);
+  setLocalStorage();
 }
 
 async function getObjfomItem(event) {
@@ -97,4 +104,6 @@ function appendItens(APIarray) {
 window.onload = async () => {
   const api = await fetchProducts('computador');
   appendItens(api.results);
+  setLocalStorage();
+  getSavedCartItems();
 };
