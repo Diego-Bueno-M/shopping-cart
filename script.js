@@ -37,7 +37,16 @@ const createCounter = () => {
   return counter;
 };
 
+const removeCounter = () => {
+  const cartRemove = document.querySelector('.cart');
+  const childToRemove = cartRemove.lastChild;
+  cartRemove.removeChild(childToRemove);
+};
+
+// uso do indexOf com a ajuda do site => https://www.devmedia.com.br/javascript-indexof-encontrando-a-posicao-de-um-caractere-ou-string/39422
+// uso do substring com a ajuda do site => https://www.devmedia.com.br/javascript-substring-selecionando-parte-de-uma-string/39232
 const counterCalculate = async (param) => {
+  removeCounter();
   const counter = createCounter();
   if (!param) {
     const cartItems = document.querySelector('.cart__items');
@@ -45,15 +54,13 @@ const counterCalculate = async (param) => {
     let totalPrice = 0;
     items.forEach((product) => {
       const productText = product.innerText;
-      // uso do indexOf com a ajuda do site => https://www.devmedia.com.br/javascript-indexof-encontrando-a-posicao-de-um-caractere-ou-string/39422
       const priceIndex = productText.indexOf('$');
-      // uso do substring com a ajuda do site => https://www.devmedia.com.br/javascript-substring-selecionando-parte-de-uma-string/39232
       const produtPrice = productText.substring(priceIndex + 1);
       totalPrice += parseFloat(produtPrice);
   });
-  counter.innerText = `Subtotal R$${totalPrice}`;
+  counter.innerText = totalPrice;
   } else if (param === 0) {
-    counter.innerText = 'Subtotal R$ 0';
+    counter.innerText = 0;
   }
 };
 
