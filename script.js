@@ -28,10 +28,41 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+const createCounter = () => {
+  const cartItems = document.querySelector('.cart');
+  const counter = document.createElement('div');
+  counter.className = 'total-price';
+  counter.innerText = 'Subtotal';
+  cartItems.appendChild(counter);
+  return counter;
+};
+
+const counterCalculate = async (param) => {
+  const counter = createCounter();
+  if (!param) {
+    const cartItems = document.querySelector('.cart__items');
+    const items = cartItems.childNodes;
+    let totalPrice = 0;
+    items.forEach((product) => {
+      const productText = product.innerText;
+      // uso do indexOf com a ajuda do site => https://www.devmedia.com.br/javascript-indexof-encontrando-a-posicao-de-um-caractere-ou-string/39422
+      const priceIndex = productText.indexOf('$');
+      // uso do substring com a ajuda do site => https://www.devmedia.com.br/javascript-substring-selecionando-parte-de-uma-string/39232
+      const produtPrice = productText.substring(priceIndex + 1);
+      totalPrice += parseFloat(produtPrice);
+  });
+  counter.innerText = `Subtotal R$${totalPrice}`;
+  } else if (param === 0) {
+    counter.innerText = 'Subtotal R$ 0';
+  }
+};
+
 function cartItemClickListener(event) {
   // coloque seu código aqui
   const productToRemove = event.target;
   productToRemove.remove();
+  console.log(productToRemove);
+  counterCalculate();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -49,6 +80,7 @@ function setLocalStorage() {
 const eraseItems = () => {
   cart.innerHTML = '';
   setLocalStorage();
+  counterCalculate(0);
 };
 
 // Adiciona um produto ao carrinho de compras (precisa do obj com sku, nome e preço)
@@ -74,6 +106,7 @@ async function getObjfomItem(event) {
     salePrice: response.price,
   };
   addToCart(productObj);
+  counterCalculate();
 }
 
 // O parametro é o retorno da fetchProducts.results que é a array dos produtos
@@ -97,13 +130,10 @@ function appendItens(APIarray) {
   });
 }
 
-// const calculatePrice = () => {
-
-// }
-
 window.onload = async () => {
   const api = await fetchProducts('computador');
   appendItens(api.results);
   setLocalStorage();
   getSavedCartItems();
+  // createCounter();
 };
